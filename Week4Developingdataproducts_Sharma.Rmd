@@ -1,0 +1,65 @@
+---
+title: "Analysis of the mtcars Dataset"
+author: "Sonisa Sharma"
+date: "9.11.2019"
+output:
+  html_document:
+    df_print: paged
+always_allow_html: yes
+---
+
+## Coursera Reproducible Pitch
+
+The server.R and ui.R codes are posted on github at *https://github.com/sonisa/Week4DevelopingDataProducts*
+
+[This is my shiny link](http://127.0.0.1:3857//)
+
+---
+
+```{r, eval = FALSE}
+library(shiny)
+shinyServer(
+  function(input, output){
+    output$rentalYield <- renderText({ calculateRentalYield(input$MonthlyRent, input$Income) })
+    output$cashflowPerYear <- renderText({calculateYearlyCashflow(input$MonthlyRent, input$waterPerMonth, input$MonthlyGas, input$Electricity)})
+    output$CashSavingYear <- renderText({CashSavingYear(input$MonthlyRent, input$waterPerMonth, input$MonthlyGas, input$Electricity)})
+  }
+)
+
+calculateRentalYield <- function (MonthlyRent, Income) 
+{
+  result <- MonthlyRent * 12 / Income * 100
+  return(round(result, digits = 2))
+}
+
+calculateYearlyCashflow <- function(MonthlyRent, MonthlyGas, waterpermonth, Electricity)
+{
+  result <- (MonthlyRent  + waterpermonth + MonthlyGas + Electricity )* 12
+  return(result)
+}
+
+
+```
+
+```{r ui}
+library(shiny)
+shinyUI(pageWithSidebar(
+  headerPanel("Investment Property"),
+  sidebarPanel(
+    h4('Property'),
+    textInput('text', 'Address', value=''),
+    numericInput('Income', 'Income ($)', 90000),
+    numericInput('MonthlyRent', 'Monthly Rent ($)', 750),
+    h5('Costs'),
+    numericInput('MonthlyGas', 'MonthlyGas ($ per month)', 20),
+    numericInput('waterPerMonth', 'Water ($ per month)', 60),
+    numericInput('Electricity', 'Electricity ($ per month)', 100)
+  ),
+  mainPanel(
+    h4('Rental Yield (%)'),
+    textOutput("rentalYield"),
+    h4('Cashflow Per Year ($)'),
+    textOutput("cashflowPerYear")
+  )
+))
+```
