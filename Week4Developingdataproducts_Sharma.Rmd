@@ -3,20 +3,24 @@ title: "Analysis of the rent and income Datasets"
 author: "Sonisa Sharma"
 date: "9.11.2019"
 output:
-  html_document:
-    df_print: paged
+  ioslides_presentation
+runtime: shiny
 ---
 
 ## Coursera Reproducible Pitch
 
+
+This shinyapp includes income along with the expenditures on water, gas, electricity and rent.
+
 [Link to github repo](https://github.com/sonisa/Week4DevelopingDataProducts)
-[This is my shiny link](http://rpubs.com/Sonisa)
+[This is my shiny link](https://sonisa56.shinyapps.io/Week4Developingdataproducts_Sharma/#5)
 
 ---
 
-```{r, echo = TRUE}
+```{r, echo=FALSE}
 library(shiny)
-library(tidyverse)
+library(shinydashboard)
+library(rsconnect)
 server<-shinyServer(
   function(input, output){
     output$rentalYield <- renderText({ calculateRentalYield(input$MonthlyRent, input$Income) })
@@ -37,8 +41,8 @@ calculateYearlyCashflow <- function(MonthlyRent, MonthlyGas, waterpermonth, Elec
 }
 ```
 
-```{r ui,echo=TRUE}
-library(shiny)
+---
+```{r ui,echo = TRUE}
 ui<-shinyUI(pageWithSidebar(
   headerPanel("Investment Property"),
   sidebarPanel(
@@ -58,6 +62,9 @@ ui<-shinyUI(pageWithSidebar(
     textOutput("cashflowPerYear")
   )
 ))
-shinyApp(ui, server)
+```
+---
+```{r, echo=TRUE}
+shinyApp(ui = ui, server = server)
 ```
 
